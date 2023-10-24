@@ -1,5 +1,9 @@
 package com.studies.zamproject.entities;
 
+import jakarta.persistence.*;
+
+import java.util.Set;
+
 @Entity
 public class Event {
     @Id
@@ -15,5 +19,5 @@ public class Event {
     private float longitude;
 
     @OneToMany(mappedBy="event")
-    private Set<EventTags> eventTags;
+    private Set<EventTag> eventTags;
 }

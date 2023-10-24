@@ -1,5 +1,7 @@
 package com.studies.zamproject.entities;
 
+import jakarta.persistence.*;
+
 @Entity
 @Table(name = "event_tags")
 public class EventTag {
