@@ -1,23 +1,44 @@
+/* (C)2023 */
 package com.studies.zamproject.entities;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
+@Table(name = "event")
 public class Event {
     @Id
-    private int id;
-    private String name;
-    @ManyToOne
-    @JoinColumn(name="organizer_id", nullable=false)
-    private Organizer organizer;
-    private int addressId;
-    private boolean free;
-    private String description;
-    private float latitude;
-    private float longitude;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @OneToMany(mappedBy="event")
-    private Set<EventTag> eventTags;
+    @NotNull
+    @Size(min = 0, max = 256)
+    private String name;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "organizer_id")
+    private Organizer organizer;
+
+    private Boolean free;
+
+    @Size(min = 0, max = 10000)
+    private String description;
+
+    @DecimalMin("-90.0")
+    @DecimalMax("90.0")
+    private Double latitude;
+
+    @DecimalMin("-180.0")
+    @DecimalMax("180.0")
+    private Double longitude;
+
+    @ManyToMany(
+            cascade = {CascadeType.MERGE},
+            fetch = FetchType.LAZY)
+    private Set<Tag> tags;
 }

@@ -1,20 +1,23 @@
+/* (C)2023 */
 package com.studies.zamproject.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
 @Table(name = "tag")
 public class Tag {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @NotNull
+    @Size(min = 0, max = 256)
+    @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "tag")
-    private Set<EventTag> eventTags;
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Set<Event> eventTags;
 }
