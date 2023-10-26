@@ -14,7 +14,7 @@ public class Tag {
     private Long id;
 
     @NotNull
-    @Size(min = 0, max = 256)
+    @Size(max = 256)
     @Column(unique = true)
     private String name;
 

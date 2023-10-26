@@ -16,7 +16,7 @@ public class Event {
     private Long id;
 
     @NotNull
-    @Size(min = 0, max = 256)
+    @Size(max = 256)
     private String name;
 
     @NotNull
@@ -26,7 +26,7 @@ public class Event {
 
     private Boolean free;
 
-    @Size(min = 0, max = 10000)
+    @Size(max = 10000)
     private String description;
 
     @DecimalMin("-90.0")

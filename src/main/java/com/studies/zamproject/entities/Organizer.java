@@ -14,15 +14,15 @@ public class Organizer {
     private Long id;
 
     @NotNull
-    @Size(min = 0, max = 256)
+    @Size(max = 256)
     private String name;
 
     @NotNull
     @Column(unique = true)
-    @Size(min = 0, max = 256)
+    @Size(max = 256)
     private String email;
 
-    @Size(min = 0, max = 20)
+    @Size(max = 20)
     private String telephone;
 
     @OneToMany(mappedBy = "organizer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
