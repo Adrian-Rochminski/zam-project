@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ep-falling-surf-33612417.eu-central-1.aws.neon.tech/neondb?user=Adrian-Rochminski&password=2hIXTRzLwyU3
+    url: jdbc:postgresql://ep-falling-surf-33612417.eu-central-1.aws.neon.tech/neondb
+    username: Adrian-Rochminski
+    password: 2hIXTRzLwyU3
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
