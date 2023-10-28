@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "organizer")
-public class Organizer implements UserDetails {
+@Table(name = "_user")
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +37,7 @@ public class Organizer implements UserDetails {
     @Size(max = 20)
     private String password;
 
-    @OneToMany(mappedBy = "organizer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Event> events;
 
     @Override
