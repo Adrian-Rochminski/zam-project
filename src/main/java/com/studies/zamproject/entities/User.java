@@ -48,7 +48,7 @@ public class User implements UserDetails {
     private String role;
 
     @NotNull
-    @Size(max = 20)
+    @Size(max = 60)
     @Setter
     private String password;
 
