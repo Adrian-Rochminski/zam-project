@@ -1,7 +1,7 @@
 /* (C)2023 */
 package com.studies.zamproject.dtos;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @NotNull private String email;
+    @NotBlank private String email;
 
-    @NotNull private String password;
+    @NotBlank private String password;
 }
