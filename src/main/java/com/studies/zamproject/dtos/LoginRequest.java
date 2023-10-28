@@ -1,3 +1,4 @@
+/* (C)2023 */
 package com.studies.zamproject.dtos;
 
 import jakarta.validation.constraints.NotNull;
@@ -11,9 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @NotNull
-    private String email;
+    @NotNull private String email;
 
-    @NotNull
-    private String password;
+    @NotNull private String password;
 }

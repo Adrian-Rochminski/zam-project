@@ -1,7 +1,7 @@
+/* (C)2023 */
 package com.studies.zamproject.services;
 
 import com.studies.zamproject.dtos.LoginRequest;
-import com.studies.zamproject.exceptions.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,13 +18,13 @@ public class AuthService {
 
     public void authenticate(LoginRequest loginRequest) {
         try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-            );
+            Authentication auth =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (Exception e) {
             log.error("Authentication error occured", e);
-            throw BadRequestException.wrongCredentialsProvided();
         }
     }
 }

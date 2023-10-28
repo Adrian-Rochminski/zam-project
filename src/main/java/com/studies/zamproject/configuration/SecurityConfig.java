@@ -1,6 +1,7 @@
+/* (C)2023 */
 package com.studies.zamproject.configuration;
 
-import com.studies.zamproject.exceptions.BadRequestException;
+import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/login", "/auth/logout").permitAll()
-                        .anyRequest().authenticated()
-                );
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        (requests) ->
+                                requests.requestMatchers("/auth/login", "/auth/logout")
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated());
 
         return http.build();
     }
@@ -41,7 +43,7 @@ public class SecurityConfig {
         return username ->
                 userRepository
                         .findByEmail(username)
-                        .orElseThrow(() -> BadRequestException.userNotFound(username));
+                        .orElseThrow(() -> NotFoundException.userNotFound(username));
     }
 
     @Bean
@@ -53,7 +55,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

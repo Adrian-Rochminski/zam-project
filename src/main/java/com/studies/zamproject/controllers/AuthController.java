@@ -1,3 +1,4 @@
+/* (C)2023 */
 package com.studies.zamproject.controllers;
 
 import com.studies.zamproject.dtos.LoginRequest;
@@ -29,8 +30,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+        SecurityContextLogoutHandler securityContextLogoutHandler =
+                new SecurityContextLogoutHandler();
+        securityContextLogoutHandler.logout(
+                request, response, SecurityContextHolder.getContext().getAuthentication());
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
