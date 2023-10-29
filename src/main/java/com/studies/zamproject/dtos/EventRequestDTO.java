@@ -19,11 +19,11 @@ public class EventRequestDTO {
 
     private Boolean free;
 
-    @NotNull
-    private Long owner;
-
     @Size(max = 10000)
     private String description;
+
+    @NotNull
+    private Long owner;
 
     @DecimalMin("-90.0")
     @DecimalMax("90.0")
