@@ -25,6 +25,7 @@ public class AuthService {
             SecurityContextHolder.getContext().setAuthentication(auth);
         } catch (Exception e) {
             log.error("Authentication error occured", e);
+            throw e;
         }
     }
 }
