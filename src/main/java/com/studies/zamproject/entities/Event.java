@@ -2,10 +2,8 @@
 package com.studies.zamproject.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+
 import java.util.Set;
 
 @Entity
@@ -15,14 +13,14 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Size(max = 256)
     private String name;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User owner;
 
     private Boolean free;
 
