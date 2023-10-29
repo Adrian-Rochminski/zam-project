@@ -8,3 +8,16 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+
+server:
+  servlet:
+    context-path: /api
+    session:
+      timeout: 18000
+
+app:
+  organizer-role: organizer

@@ -21,8 +21,8 @@ public class Event {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "organizer_id")
-    private Organizer organizer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private Boolean free;
 
