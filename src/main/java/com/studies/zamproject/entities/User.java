@@ -52,7 +52,7 @@ public class User implements UserDetails {
     @Setter
     private String password;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
     private Set<Event> events;
