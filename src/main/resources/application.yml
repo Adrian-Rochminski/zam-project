@@ -12,6 +12,16 @@ spring:
     store-type: jdbc
     jdbc:
       initialize-schema: always
+  mail:
+    host: smtp.example.com
+    username: eventtu.company@interia.eu
+    password: EventTam1234
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   servlet:
