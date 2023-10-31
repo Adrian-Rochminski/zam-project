@@ -5,6 +5,8 @@ import com.studies.zamproject.entities.Event;
 import com.studies.zamproject.mappers.EventMapper;
 import com.studies.zamproject.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,4 +34,7 @@ public class EventService {
 
     }
 
+    public Page<Event> getEvents(Pageable pageable) {
+        return eventRepo.findAll(pageable);
+    }
 }
