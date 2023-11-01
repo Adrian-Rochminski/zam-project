@@ -34,7 +34,6 @@ public class UserWithToken {
 
     @NotNull private String password;
 
-    @Size(max = 20)
     @Column(unique = true)
     private String token;
 }
