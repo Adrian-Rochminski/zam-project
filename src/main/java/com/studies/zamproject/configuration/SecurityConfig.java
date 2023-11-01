@@ -40,7 +40,7 @@ public class SecurityConfig {
                                                 "/registration/organizer")
                                         .permitAll()
                                         .requestMatchers("/registration/activate/*")
-                                        .hasRole(adminRole)
+                                        .hasAnyAuthority(adminRole)
                                         .anyRequest()
                                         .authenticated());
 
