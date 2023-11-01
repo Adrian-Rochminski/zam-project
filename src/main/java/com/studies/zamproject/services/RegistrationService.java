@@ -7,11 +7,13 @@ import com.studies.zamproject.entities.User;
 import com.studies.zamproject.entities.UserWithToken;
 import com.studies.zamproject.exceptions.BadRequestException;
 import com.studies.zamproject.exceptions.DataConflictException;
+import com.studies.zamproject.exceptions.InternalServerError;
 import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.repositories.UserRepository;
 import com.studies.zamproject.repositories.UserWithTokenRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RegistrationService {
     private final EmailService emailService;
     private final UserRepository userRepository;
@@ -45,12 +48,17 @@ public class RegistrationService {
                         .build();
         userWithTokenRepository.save(userWithToken);
 
-        emailService.sendVerificationEmail(registrationRequest.getEmail());
-        return UserDto.builder()
-                .email(userWithToken.getEmail())
-                .telephone(userWithToken.getTelephone())
-                .name(userWithToken.getName())
-                .build();
+        try {
+            emailService.sendVerificationEmail(registrationRequest.getEmail());
+            return UserDto.builder()
+                    .email(userWithToken.getEmail())
+                    .telephone(userWithToken.getTelephone())
+                    .name(userWithToken.getName())
+                    .build();
+        } catch (Exception e) {
+            log.error("There was a problem with sending email", e);
+            throw InternalServerError.couldNotSendEmail(userWithToken.getEmail());
+        }
     }
 
     public void activate(String token) {

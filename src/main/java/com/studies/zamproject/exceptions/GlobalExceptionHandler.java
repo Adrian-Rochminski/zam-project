@@ -30,4 +30,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDataConflictException(DataConflictException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(InternalServerError.class)
+    public ResponseEntity<String> handleDataConflictException(InternalServerError ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
