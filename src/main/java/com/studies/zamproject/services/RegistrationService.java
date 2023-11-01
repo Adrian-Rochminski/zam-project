@@ -65,7 +65,7 @@ public class RegistrationService {
         var userWithToken =
                 userWithTokenRepository
                         .findByToken(token)
-                        .orElseThrow(() -> NotFoundException.userNotFound(token));
+                        .orElseThrow(() -> NotFoundException.userWithTokenNotFound(token));
 
         validateAccountActivationRequest(userWithToken);
 
