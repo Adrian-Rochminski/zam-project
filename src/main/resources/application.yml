@@ -31,3 +31,4 @@ server:
 
 app:
   organizer-role: organizer
+  admin-role: admin
