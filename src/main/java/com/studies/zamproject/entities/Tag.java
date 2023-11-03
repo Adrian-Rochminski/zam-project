@@ -19,7 +19,6 @@ public class Tag {
     @Column(unique = true)
     private String name;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<Event> eventTags;
 }
