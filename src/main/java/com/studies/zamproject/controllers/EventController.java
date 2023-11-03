@@ -47,4 +47,21 @@ public class EventController {
         return new ResponseEntity<>(eventService.getEvents(pageable).map(eventMapper::eventToEventDto), HttpStatus.OK);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "/events/{id}")
+    public ResponseEntity<Void> updateEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO, @PathVariable Long id) {
+        Event event = eventService.updateEvent(eventRequestDTO, id);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .buildAndExpand(event.getId()).toUri();
+
+        return ResponseEntity.status(HttpStatus.OK).location(location).build();
+    }
+
+    @DeleteMapping(value = "/events/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+        eventService.deleteEvent(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

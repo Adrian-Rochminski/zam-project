@@ -33,5 +33,5 @@ public class EventRequestDTO {
     @DecimalMax("180.0")
     private Double longitude;
 
-    private Set<String> tags;
+    private Set<Long> tags;
 }
