@@ -14,4 +14,8 @@ public class NotFoundException extends RuntimeException {
     public static NotFoundException userNotFound(String email) {
         return new NotFoundException(String.format("User with email: %s not found", email));
     }
+
+    public static NotFoundException userWithTokenNotFound(String token) {
+        return new NotFoundException(String.format("User with token: %s not found", token));
+    }
 }

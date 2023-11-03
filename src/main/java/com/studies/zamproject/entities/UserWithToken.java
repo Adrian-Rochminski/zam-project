@@ -4,10 +4,16 @@ package com.studies.zamproject.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Entity
-@Table(name = "organizer_with_token")
-public class OrganizerWithToken {
+@Table(name = "user_with_token")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class UserWithToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +30,10 @@ public class OrganizerWithToken {
     @Size(max = 20)
     private String telephone;
 
-    @Size(max = 20)
+    @NotNull private String role;
+
+    @NotNull private String password;
+
+    @Column(unique = true)
     private String token;
 }

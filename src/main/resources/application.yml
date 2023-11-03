@@ -13,9 +13,10 @@ spring:
     jdbc:
       initialize-schema: always
   mail:
-    host: smtp.example.com
+    host: poczta.interia.pl
     username: eventtu.company@interia.eu
     password: EventTam1234
+    port: 587
     properties:
       mail:
         smtp:
@@ -31,3 +32,4 @@ server:
 
 app:
   organizer-role: organizer
+  admin-role: admin
