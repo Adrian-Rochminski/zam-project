@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class StartupConfig {
 
-    @Value("${app.organizer-role}")
-    private String organizerRole;
+    @Value("${app.admin-role}")
+    private String adminRole;
 
     @Bean
     public CommandLineRunner initData(UserRepository userRepository) {
@@ -25,7 +25,7 @@ public class StartupConfig {
                             .name("test")
                             .password(
                                     "$2a$12$1ZdVtupqu72K7kUDOu4uVumukogroUEDJYVyihQgJdTAP7uNSFEoK")
-                            .role(organizerRole)
+                            .role(adminRole)
                             .telephone("123456789")
                             .build());
         };

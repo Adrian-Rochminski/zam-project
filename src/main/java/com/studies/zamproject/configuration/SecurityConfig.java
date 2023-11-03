@@ -4,6 +4,7 @@ package com.studies.zamproject.configuration;
 import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,13 +26,21 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
+    @Value("${app.admin-role}")
+    private String adminRole;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         (requests) ->
-                                requests.requestMatchers("/auth/login", "/auth/logout")
+                                requests.requestMatchers(
+                                                "/auth/login",
+                                                "/auth/logout",
+                                                "/registration/organizer")
                                         .permitAll()
+                                        .requestMatchers("/registration/activate/*")
+                                        .hasAnyAuthority(adminRole)
                                         .anyRequest()
                                         .authenticated());
 

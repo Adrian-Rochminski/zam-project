@@ -12,6 +12,17 @@ spring:
     store-type: jdbc
     jdbc:
       initialize-schema: always
+  mail:
+    host: poczta.interia.pl
+    username: eventtu.company@interia.eu
+    password: EventTam1234
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 server:
   servlet:
@@ -21,3 +32,4 @@ server:
 
 app:
   organizer-role: organizer
+  admin-role: admin

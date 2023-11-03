@@ -25,12 +25,15 @@ public class AuthService {
     private final SecurityContextRepository securityContextRepository =
             new HttpSessionSecurityContextRepository();
 
-    private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
+    private final SecurityContextHolderStrategy securityContextHolderStrategy =
+            SecurityContextHolder.getContextHolderStrategy();
 
-    public void authenticate(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+    public void authenticate(
+            LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
-            UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
-                    loginRequest.getEmail(), loginRequest.getPassword());
+            UsernamePasswordAuthenticationToken token =
+                    UsernamePasswordAuthenticationToken.unauthenticated(
+                            loginRequest.getEmail(), loginRequest.getPassword());
             Authentication authentication = authenticationManager.authenticate(token);
             SecurityContext context = securityContextHolderStrategy.createEmptyContext();
             context.setAuthentication(authentication);
