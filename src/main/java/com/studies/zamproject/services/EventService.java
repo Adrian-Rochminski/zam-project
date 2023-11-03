@@ -36,10 +36,16 @@ public class EventService {
     }
 
     public Event updateEvent(EventRequestDTO update, Long id) {
-        Event newEvent = eventMapper.eventReqDtoToEvent(update);
+        Event updatedEvent;
+        try {
+            updatedEvent = eventRepo.getReferenceById(id);
+        } catch (EntityNotFoundException e) {
+            updatedEvent = new Event();
+            updatedEvent.setId(id);
+        }
         if (update.getOwner() != null) {
             User owner = userRepo.getReferenceById(update.getOwner());
-            newEvent.setOwner(owner);
+            updatedEvent.setOwner(owner);
         }
         if (update.getTags() != null) {
             Set<Tag> tags = new HashSet<>();
@@ -49,12 +55,24 @@ public class EventService {
                     tags.add(tag);
                 } catch (EntityNotFoundException ignored) {}
             }
-            newEvent.setTags(tags);
+            updatedEvent.setTags(tags);
         }
 
-        newEvent.setId(id);
+        if (update.getFree() != null) {
+            updatedEvent.setFree(update.getFree());
+        }
+        if (update.getDescription() != null) {
+            updatedEvent.setDescription(update.getDescription());
+        }
+        if (update.getLatitude() != null) {
+            updatedEvent.setLatitude(update.getLatitude());
+        }
+        if (update.getLongitude() != null) {
+            updatedEvent.setLongitude(update.getLongitude());
+        }
 
-        return eventRepo.save(newEvent);
+
+        return eventRepo.save(updatedEvent);
     }
 
     public void deleteEvent(Long id) {
