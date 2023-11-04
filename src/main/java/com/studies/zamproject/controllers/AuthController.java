@@ -2,6 +2,7 @@
 package com.studies.zamproject.controllers;
 
 import com.studies.zamproject.dtos.LoginRequest;
+import com.studies.zamproject.dtos.UserDTO;
 import com.studies.zamproject.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,12 +25,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(
+    public ResponseEntity<UserDTO> loginUser(
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletRequest request,
             HttpServletResponse response) {
-        authService.authenticate(loginRequest, request, response);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authService.authenticate(loginRequest, request, response));
     }
 
     @PostMapping("/logout")

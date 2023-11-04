@@ -2,7 +2,7 @@
 package com.studies.zamproject.services;
 
 import com.studies.zamproject.dtos.RegistrationRequest;
-import com.studies.zamproject.dtos.UserDto;
+import com.studies.zamproject.dtos.UserDTO;
 import com.studies.zamproject.entities.User;
 import com.studies.zamproject.entities.UserWithToken;
 import com.studies.zamproject.exceptions.BadRequestException;
@@ -32,7 +32,7 @@ public class RegistrationService {
     private String organizerRole;
 
     @Transactional(rollbackFor = Exception.class)
-    public UserDto registerOrganizer(RegistrationRequest registrationRequest) {
+    public UserDTO registerOrganizer(RegistrationRequest registrationRequest) {
         var optionalUser = userRepository.findByEmail(registrationRequest.getEmail());
         if (optionalUser.isPresent()) {
             throw BadRequestException.userAlreadyExistsException(registrationRequest.getEmail());
@@ -50,7 +50,7 @@ public class RegistrationService {
 
         try {
             emailService.sendVerificationEmail(registrationRequest.getEmail());
-            return UserDto.builder()
+            return UserDTO.builder()
                     .email(userWithToken.getEmail())
                     .telephone(userWithToken.getTelephone())
                     .name(userWithToken.getName())
