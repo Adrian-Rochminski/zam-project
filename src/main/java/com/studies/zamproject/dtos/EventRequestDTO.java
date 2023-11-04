@@ -1,38 +1,26 @@
 /* (C)2023 */
-package com.studies.zamproject.entities;
+package com.studies.zamproject.dtos;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Entity
-@Table(name = "event")
-@Getter
-@Setter
-public class Event {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@Data
+public class EventRequestDTO {
     @NotBlank
     @Size(max = 256)
     private String name;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User owner;
 
     private Boolean free;
 
     @Size(max = 10000)
     private String description;
+
+    @NotNull private Long owner;
 
     @DecimalMin("-90.0")
     @DecimalMax("90.0")
@@ -42,8 +30,5 @@ public class Event {
     @DecimalMax("180.0")
     private Double longitude;
 
-    @ManyToMany(
-            cascade = {CascadeType.MERGE},
-            fetch = FetchType.LAZY)
-    private Set<Tag> tags;
+    private Set<Long> tags;
 }

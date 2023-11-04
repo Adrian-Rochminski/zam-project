@@ -1,12 +1,13 @@
 /* (C)2023 */
 package com.studies.zamproject.configuration;
 
+import com.studies.zamproject.configuration.config.AppConfig;
 import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,8 +27,7 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
-    @Value("${app.admin-role}")
-    private String adminRole;
+    private final AppConfig appConfig;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,7 +40,9 @@ public class SecurityConfig {
                                                 "/registration/organizer")
                                         .permitAll()
                                         .requestMatchers("/registration/activate/*")
-                                        .hasAnyAuthority(adminRole)
+                                        .hasAnyAuthority(appConfig.getAdminRole())
+                                        .requestMatchers(HttpMethod.GET, "/events", "/events/*")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated());
 
