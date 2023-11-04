@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -48,8 +49,10 @@ public class EventController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{id}")
     public ResponseEntity<EventDTO> updateEvent(
-            @Valid @RequestBody EventRequestDTO eventRequestDTO, @PathVariable Long id) {
-        var eventDTO = eventService.updateEvent(eventRequestDTO, id);
+            @Valid @RequestBody EventRequestDTO eventRequestDTO,
+            @PathVariable Long id,
+            Authentication authentication) {
+        var eventDTO = eventService.updateEvent(eventRequestDTO, id, authentication);
         URI location =
                 ServletUriComponentsBuilder.fromCurrentRequest()
                         .buildAndExpand(eventDTO.getId())
@@ -60,8 +63,8 @@ public class EventController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
-        eventService.deleteEvent(id);
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id, Authentication authentication) {
+        eventService.deleteEvent(id, authentication);
         return ResponseEntity.noContent().build();
     }
 }

@@ -32,7 +32,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InternalServerError.class)
-    public ResponseEntity<String> handleDataConflictException(InternalServerError ex) {
+    public ResponseEntity<String> handleInternalServerError(InternalServerError ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<String> handleForbiddenException(ForbiddenException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

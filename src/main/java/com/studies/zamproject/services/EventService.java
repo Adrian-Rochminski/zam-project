@@ -1,11 +1,13 @@
 /* (C)2023 */
 package com.studies.zamproject.services;
 
+import com.studies.zamproject.configuration.config.AppConfig;
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
 import com.studies.zamproject.entities.Event;
 import com.studies.zamproject.entities.Tag;
 import com.studies.zamproject.entities.User;
+import com.studies.zamproject.exceptions.ForbiddenException;
 import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.mappers.EventMapper;
 import com.studies.zamproject.repositories.EventRepository;
@@ -15,19 +17,24 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventService {
     private final EventRepository eventRepo;
     private final UserRepository userRepo;
     private final TagRepository tagRepo;
     private final EventMapper eventMapper;
+    private final AppConfig appConfig;
 
     public EventDTO addEvent(EventRequestDTO eventRequest) {
         Event event = eventMapper.eventReqDtoToEvent(eventRequest);
@@ -35,17 +42,14 @@ public class EventService {
     }
 
     public EventDTO getEventDto(Long eventId) {
-        var event =
-                eventRepo
-                        .findById(eventId)
-                        .orElseThrow(() -> NotFoundException.eventWithIdNotFound(eventId));
+        var event = getEvent(eventId);
         return eventMapper.eventToEventDto(event);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public EventDTO updateEvent(EventRequestDTO update, Long id) {
-        Event updatedEvent =
-                eventRepo.findById(id).orElseThrow(() -> NotFoundException.eventWithIdNotFound(id));
+    public EventDTO updateEvent(EventRequestDTO update, Long id, Authentication authentication) {
+        checkPermissionForDeleteAndUpdate(id, authentication);
+        Event updatedEvent = getEvent(id);
         if (update.getOwner() != null) {
             User owner =
                     userRepo.findById(update.getOwner())
@@ -57,6 +61,10 @@ public class EventService {
         updateRest(update, updatedEvent);
 
         return eventMapper.eventToEventDto(updatedEvent);
+    }
+
+    private Event getEvent(Long id) {
+        return eventRepo.findById(id).orElseThrow(() -> NotFoundException.eventWithIdNotFound(id));
     }
 
     private void updateRest(EventRequestDTO update, Event updatedEvent) {
@@ -81,14 +89,25 @@ public class EventService {
                 try {
                     Tag tag = tagRepo.getReferenceById(tagId);
                     tags.add(tag);
-                } catch (EntityNotFoundException ignored) {
+                } catch (EntityNotFoundException e) {
+                    log.error("Tag not found", e);
                 }
             }
             updatedEvent.setTags(tags);
         }
     }
 
-    public void deleteEvent(Long id) {
+    private void checkPermissionForDeleteAndUpdate(Long eventId, Authentication authentication) {
+        if (authentication
+                .getAuthorities()
+                .contains(new SimpleGrantedAuthority(appConfig.getAdminRole()))) return;
+        var event = getEvent(eventId);
+        if (!event.getOwner().getEmail().equals(authentication.getName()))
+            throw ForbiddenException.noPermissionToOperation();
+    }
+
+    public void deleteEvent(Long id, Authentication authentication) {
+        checkPermissionForDeleteAndUpdate(id, authentication);
         eventRepo.deleteById(id);
     }
 
