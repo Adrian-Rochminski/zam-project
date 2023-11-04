@@ -20,12 +20,13 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/events")
 public class EventController {
     private final EventService eventService;
     private final EventMapper eventMapper;
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping(value="/events", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO) {
         Event event = eventService.addEvent(eventRequestDTO);
         URI location = ServletUriComponentsBuilder
@@ -36,19 +37,19 @@ public class EventController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/events/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EventDTO> getEvent(@PathVariable Long id) {
         Optional<Event> event = eventService.getEvent(id);
         return ResponseEntity.of(event.map(eventMapper::eventToEventDto));
     }
 
-    @GetMapping(value = "/events")
+    @GetMapping()
     public ResponseEntity<Page<EventDTO>> readEvents(Pageable pageable) {
         return new ResponseEntity<>(eventService.getEvents(pageable).map(eventMapper::eventToEventDto), HttpStatus.OK);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(value = "/events/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<Void> updateEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO, @PathVariable Long id) {
         Event event = eventService.updateEvent(eventRequestDTO, id);
         URI location = ServletUriComponentsBuilder
@@ -58,7 +59,7 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).location(location).build();
     }
 
-    @DeleteMapping(value = "/events/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
