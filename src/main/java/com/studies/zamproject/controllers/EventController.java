@@ -1,11 +1,11 @@
+/* (C)2023 */
 package com.studies.zamproject.controllers;
 
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
-import com.studies.zamproject.entities.Event;
-import com.studies.zamproject.mappers.EventMapper;
 import com.studies.zamproject.services.EventService;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,54 +15,53 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.Optional;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/events")
 public class EventController {
     private final EventService eventService;
-    private final EventMapper eventMapper;
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO) {
-        Event event = eventService.addEvent(eventRequestDTO);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(event.getId()).toUri();
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<EventDTO> addEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO) {
+        var eventDTO = eventService.addEvent(eventRequestDTO);
+        URI location =
+                ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}")
+                        .buildAndExpand(eventDTO.getId())
+                        .toUri();
+        return ResponseEntity.created(location).body(eventDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EventDTO> getEvent(@PathVariable Long id) {
-        Optional<Event> event = eventService.getEvent(id);
-        return ResponseEntity.of(event.map(eventMapper::eventToEventDto));
+        return ResponseEntity.ok(eventService.getEventDto(id));
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping()
     public ResponseEntity<Page<EventDTO>> readEvents(Pageable pageable) {
-        return new ResponseEntity<>(eventService.getEvents(pageable).map(eventMapper::eventToEventDto), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.getEvents(pageable));
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> updateEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO, @PathVariable Long id) {
-        Event event = eventService.updateEvent(eventRequestDTO, id);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .buildAndExpand(event.getId()).toUri();
+    public ResponseEntity<EventDTO> updateEvent(
+            @Valid @RequestBody EventRequestDTO eventRequestDTO, @PathVariable Long id) {
+        var eventDTO = eventService.updateEvent(eventRequestDTO, id);
+        URI location =
+                ServletUriComponentsBuilder.fromCurrentRequest()
+                        .buildAndExpand(eventDTO.getId())
+                        .toUri();
 
-        return ResponseEntity.status(HttpStatus.OK).location(location).build();
+        return ResponseEntity.status(HttpStatus.OK).location(location).body(eventDTO);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
-
 }

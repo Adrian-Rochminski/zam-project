@@ -1,10 +1,7 @@
+/* (C)2023 */
 package com.studies.zamproject.repositories;
 
 import com.studies.zamproject.entities.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface EventRepository extends JpaRepository<Event, Long> {
-
-}
+public interface EventRepository extends JpaRepository<Event, Long> {}

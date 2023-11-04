@@ -1,12 +1,10 @@
+/* (C)2023 */
 package com.studies.zamproject.dtos;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Set;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class EventDTO {
     private Long id;
     private String name;

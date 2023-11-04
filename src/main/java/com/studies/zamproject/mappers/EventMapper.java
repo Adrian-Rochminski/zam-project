@@ -1,3 +1,4 @@
+/* (C)2023 */
 package com.studies.zamproject.mappers;
 
 import com.studies.zamproject.dtos.EventDTO;
@@ -13,9 +14,11 @@ public interface EventMapper {
 
     @Mapping(target = "id", ignore = true)
     Event eventReqDtoToEvent(EventRequestDTO eventReqDto);
+
     EventDTO eventToEventDto(Event event);
 
     Tag tagIdToTag(Long id);
+
     String tagToName(Tag tag);
 
     User userIdToUser(Long id);
@@ -26,5 +29,4 @@ public interface EventMapper {
         }
         return user.getId();
     }
-
 }

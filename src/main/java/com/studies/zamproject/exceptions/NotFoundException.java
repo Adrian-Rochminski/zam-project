@@ -15,7 +15,15 @@ public class NotFoundException extends RuntimeException {
         return new NotFoundException(String.format("User with email: %s not found", email));
     }
 
+    public static NotFoundException userWithIdNotFound(Long id) {
+        return new NotFoundException(String.format("User with id: %d not found", id));
+    }
+
     public static NotFoundException userWithTokenNotFound(String token) {
         return new NotFoundException(String.format("User with token: %s not found", token));
+    }
+
+    public static NotFoundException eventWithIdNotFound(Long id) {
+        return new NotFoundException(String.format("Event with id: %d not found", id));
     }
 }

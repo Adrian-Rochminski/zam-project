@@ -1,22 +1,25 @@
+/* (C)2023 */
 package com.studies.zamproject.services;
 
+import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
 import com.studies.zamproject.entities.Event;
 import com.studies.zamproject.entities.Tag;
 import com.studies.zamproject.entities.User;
+import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.mappers.EventMapper;
 import com.studies.zamproject.repositories.EventRepository;
 import com.studies.zamproject.repositories.TagRepository;
 import com.studies.zamproject.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,38 +29,37 @@ public class EventService {
     private final TagRepository tagRepo;
     private final EventMapper eventMapper;
 
-    public Event addEvent(EventRequestDTO eventRequest) {
+    public EventDTO addEvent(EventRequestDTO eventRequest) {
         Event event = eventMapper.eventReqDtoToEvent(eventRequest);
-        return eventRepo.save(event);
+        return eventMapper.eventToEventDto(eventRepo.save(event));
     }
 
-    public Optional<Event> getEvent(Long eventId) {
-        return eventRepo.findById(eventId);
+    public EventDTO getEventDto(Long eventId) {
+        var event =
+                eventRepo
+                        .findById(eventId)
+                        .orElseThrow(() -> NotFoundException.eventWithIdNotFound(eventId));
+        return eventMapper.eventToEventDto(event);
     }
 
-    public Event updateEvent(EventRequestDTO update, Long id) {
-        Event updatedEvent;
-        try {
-            updatedEvent = eventRepo.getReferenceById(id);
-        } catch (EntityNotFoundException e) {
-            updatedEvent = new Event();
-            updatedEvent.setId(id);
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public EventDTO updateEvent(EventRequestDTO update, Long id) {
+        Event updatedEvent =
+                eventRepo.findById(id).orElseThrow(() -> NotFoundException.eventWithIdNotFound(id));
         if (update.getOwner() != null) {
-            User owner = userRepo.getReferenceById(update.getOwner());
+            User owner =
+                    userRepo.findById(update.getOwner())
+                            .orElseThrow(() -> NotFoundException.userWithIdNotFound(id));
             updatedEvent.setOwner(owner);
         }
-        if (update.getTags() != null) {
-            Set<Tag> tags = new HashSet<>();
-            for (Long tagId : update.getTags()) {
-                try {
-                    Tag tag = tagRepo.getReferenceById(tagId);
-                    tags.add(tag);
-                } catch (EntityNotFoundException ignored) {}
-            }
-            updatedEvent.setTags(tags);
-        }
+        updateTags(update, updatedEvent);
 
+        updateRest(update, updatedEvent);
+
+        return eventMapper.eventToEventDto(updatedEvent);
+    }
+
+    private void updateRest(EventRequestDTO update, Event updatedEvent) {
         if (update.getFree() != null) {
             updatedEvent.setFree(update.getFree());
         }
@@ -70,16 +72,29 @@ public class EventService {
         if (update.getLongitude() != null) {
             updatedEvent.setLongitude(update.getLongitude());
         }
+    }
 
-
-        return eventRepo.save(updatedEvent);
+    private void updateTags(EventRequestDTO update, Event updatedEvent) {
+        if (update.getTags() != null) {
+            Set<Tag> tags = new HashSet<>();
+            for (Long tagId : update.getTags()) {
+                try {
+                    Tag tag = tagRepo.getReferenceById(tagId);
+                    tags.add(tag);
+                } catch (EntityNotFoundException ignored) {
+                }
+            }
+            updatedEvent.setTags(tags);
+        }
     }
 
     public void deleteEvent(Long id) {
         eventRepo.deleteById(id);
     }
 
-    public Page<Event> getEvents(Pageable pageable) {
-        return eventRepo.findAll(pageable);
+    public Page<EventDTO> getEvents(Pageable pageable) {
+        var events = eventRepo.findAll(pageable);
+        var eventDTOS = events.stream().map(eventMapper::eventToEventDto).toList();
+        return new PageImpl<>(eventDTOS, pageable, events.getTotalElements());
     }
 }
