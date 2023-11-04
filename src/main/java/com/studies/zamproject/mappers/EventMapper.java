@@ -6,24 +6,34 @@ import com.studies.zamproject.dtos.EventRequestDTO;
 import com.studies.zamproject.entities.Event;
 import com.studies.zamproject.entities.Tag;
 import com.studies.zamproject.entities.User;
+import com.studies.zamproject.exceptions.NotFoundException;
+import com.studies.zamproject.repositories.TagRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
-public interface EventMapper {
+public abstract class EventMapper {
+    @Autowired protected TagRepository tagRepository;
 
     @Mapping(target = "id", ignore = true)
-    Event eventReqDtoToEvent(EventRequestDTO eventReqDto);
+    public abstract Event eventReqDtoToEvent(EventRequestDTO eventReqDto);
 
-    EventDTO eventToEventDto(Event event);
+    public abstract EventDTO eventToEventDto(Event event);
 
-    Tag tagIdToTag(Long id);
+    protected Tag tagIdToTag(Long id) {
+        return tagRepository
+                .findById(id)
+                .orElseThrow(() -> NotFoundException.tagWithIdNotFound(id));
+    }
 
-    String tagToName(Tag tag);
+    protected String tagToName(Tag tag) {
+        return tag.getName();
+    }
 
-    User userIdToUser(Long id);
+    protected abstract User userIdToUser(Long id);
 
-    default Long userToId(User user) {
+    protected Long userToId(User user) {
         if (user == null) {
             return null;
         }

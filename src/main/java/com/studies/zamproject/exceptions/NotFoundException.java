@@ -26,4 +26,8 @@ public class NotFoundException extends RuntimeException {
     public static NotFoundException eventWithIdNotFound(Long id) {
         return new NotFoundException(String.format("Event with id: %d not found", id));
     }
+
+    public static NotFoundException tagWithIdNotFound(Long id) {
+        return new NotFoundException(String.format("Tag with id: %d not found", id));
+    }
 }
