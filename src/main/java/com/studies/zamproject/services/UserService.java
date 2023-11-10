@@ -3,6 +3,7 @@ package com.studies.zamproject.services;
 
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.entities.User;
+import com.studies.zamproject.exceptions.BadRequestException;
 import com.studies.zamproject.exceptions.NotFoundException;
 import com.studies.zamproject.mappers.EventMapper;
 import com.studies.zamproject.repositories.EventRepository;
@@ -30,6 +31,8 @@ public class UserService {
                 eventRepository
                         .findById(eventId)
                         .orElseThrow(() -> NotFoundException.eventWithIdNotFound(eventId));
+        if (user.getFavorites().contains(event))
+            throw BadRequestException.eventIsAlreadyInFavorites(eventId);
         user.getFavorites().add(event);
     }
 
@@ -47,6 +50,8 @@ public class UserService {
                 eventRepository
                         .findById(eventId)
                         .orElseThrow(() -> NotFoundException.eventWithIdNotFound(eventId));
+        if (!user.getFavorites().contains(event))
+            throw BadRequestException.eventIsNotInYourFavorites(eventId);
         user.getFavorites().remove(event);
     }
 
