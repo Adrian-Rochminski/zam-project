@@ -24,7 +24,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/organizer/activate/{token}")
-    public ResponseEntity<String> activateOrganizer(@PathVariable String token) {
+    public ResponseEntity<Void> activateOrganizer(@PathVariable String token) {
         registrationService.activate(token);
         return ResponseEntity.noContent().build();
     }
