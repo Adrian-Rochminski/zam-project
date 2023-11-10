@@ -1,7 +1,8 @@
 /* (C)2023 */
 package com.studies.zamproject.controllers;
 
-import com.studies.zamproject.dtos.RegistrationRequest;
+import com.studies.zamproject.dtos.BaseUserRegistrationRequest;
+import com.studies.zamproject.dtos.OrganizerRegistrationRequest;
 import com.studies.zamproject.dtos.UserDTO;
 import com.studies.zamproject.services.RegistrationService;
 import jakarta.validation.Valid;
@@ -17,14 +18,26 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/organizer")
-    public ResponseEntity<UserDTO> register(
-            @RequestBody @Valid RegistrationRequest registerRequest) {
+    public ResponseEntity<UserDTO> registerOrganizer(
+            @RequestBody @Valid OrganizerRegistrationRequest registerRequest) {
         return ResponseEntity.ok().body(registrationService.registerOrganizer(registerRequest));
     }
 
-    @PostMapping("/activate/{token}")
-    public ResponseEntity<String> activate(@PathVariable String token) {
+    @PostMapping("/organizer/activate/{token}")
+    public ResponseEntity<Void> activateOrganizer(@PathVariable String token) {
         registrationService.activate(token);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/base")
+    public ResponseEntity<UserDTO> registerUser(
+            @RequestBody @Valid BaseUserRegistrationRequest registerRequest) {
+        return ResponseEntity.ok().body(registrationService.registerUser(registerRequest));
+    }
+
+    @GetMapping("/base/activate/{token}")
+    public ResponseEntity<String> activateBaseUser(@PathVariable String token) {
+        registrationService.activate(token);
+        return ResponseEntity.ok().body("Użytkownik został aktywowany");
     }
 }

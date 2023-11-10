@@ -15,14 +15,12 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    public void sendVerificationEmail(String to) {
+    public void sendVerificationEmail(String to, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setFrom(sender);
         message.setSubject("Witaj nowy organizatorze!");
-        message.setText(
-                "Aby dokończyć proces rejestracji potrzebujesz przesłać nam dokumenty"
-                        + " potwierdzające twój status podmiotu gospodarczego.");
+        message.setText(text);
         mailSender.send(message);
     }
 }
