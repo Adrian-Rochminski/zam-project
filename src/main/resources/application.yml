@@ -16,7 +16,7 @@ spring:
     host: poczta.interia.pl
     username: eventtu.company@interia.eu
     password: EventTam1234
-    port: 587
+    port: 465
     properties:
       mail:
         smtp:
