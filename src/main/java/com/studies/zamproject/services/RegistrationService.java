@@ -38,9 +38,13 @@ public class RegistrationService {
     public static final String ORGANIZER_REGISTRATION_ACTIVATION_MAIL =
             "Aby dokończyć proces rejestracji potrzebujesz przesłać nam dokumenty"
                     + " potwierdzające twój status podmiotu gospodarczego.";
+    public static final String ORGANIZER_REGISTRATION_ACTIVATION_MAIL_SUBJECT =
+            "Witaj nowy organizatorze!";
 
     public static final String BASE_USER_REGISTRATION_ACTIVATION_MAIL =
             "Aby dokończyć proces rejestracji kliknij w <a href=\"%s\">link</a>";
+    public static final String BASE_USER_REGISTRATION_ACTIVATION_MAIL_SUBJECT =
+            "Witaj nowy użytkowniku!";
 
     @Transactional(rollbackFor = Exception.class)
     public UserDTO registerOrganizer(OrganizerRegistrationRequest organizerRegistrationRequest) {
@@ -64,7 +68,8 @@ public class RegistrationService {
         try {
             emailService.sendVerificationEmail(
                     organizerRegistrationRequest.getEmail(),
-                    ORGANIZER_REGISTRATION_ACTIVATION_MAIL);
+                    ORGANIZER_REGISTRATION_ACTIVATION_MAIL,
+                    ORGANIZER_REGISTRATION_ACTIVATION_MAIL_SUBJECT);
             return UserDTO.builder()
                     .email(userWithToken.getEmail())
                     .telephone(userWithToken.getTelephone())
@@ -125,7 +130,8 @@ public class RegistrationService {
                             appConfig.getEnvironmentUrl()
                                     + contextPath
                                     + "/base/activate/"
-                                    + token));
+                                    + token),
+                    BASE_USER_REGISTRATION_ACTIVATION_MAIL_SUBJECT);
             return UserDTO.builder()
                     .email(userWithToken.getEmail())
                     .telephone(userWithToken.getTelephone())
