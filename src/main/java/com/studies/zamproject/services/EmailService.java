@@ -25,6 +25,7 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text, true);
+        helper.setFrom(sender);
         mailSender.send(mimeMessage);
     }
 }
