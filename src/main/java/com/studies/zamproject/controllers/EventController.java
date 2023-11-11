@@ -3,9 +3,12 @@ package com.studies.zamproject.controllers;
 
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
+import com.studies.zamproject.dtos.LocationRequestDTO;
 import com.studies.zamproject.services.EventService;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,5 +69,12 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id, Authentication authentication) {
         eventService.deleteEvent(id, authentication);
         return ResponseEntity.noContent().build();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/location")
+    public ResponseEntity<List<EventDTO>> getEventsByLocation(@RequestBody LocationRequestDTO locationRequestDTO) {
+        List<EventDTO> events = eventService.getEventsByLocation(locationRequestDTO);
+        return ResponseEntity.ok(events);
     }
 }
