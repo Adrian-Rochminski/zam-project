@@ -57,6 +57,17 @@ public class User implements UserDetails {
     @Setter
     private Set<Event> events;
 
+    @ManyToMany(
+            cascade = {CascadeType.MERGE},
+            fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_favorites",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "event_id")})
+    @Getter
+    @Setter
+    private Set<Event> favorites;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));

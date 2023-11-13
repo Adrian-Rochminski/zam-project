@@ -12,5 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
     private String organizerRole;
     private String adminRole;
+    private String baseRole;
     private List<String> tags;
+    private String environmentUrl;
 }

@@ -33,6 +33,7 @@ server:
 app:
   organizer-role: organizer
   admin-role: admin
+  base-role: base
   tags:
     - tag1
     - tag2
@@ -44,3 +45,4 @@ app:
     - tag8
     - tag9
     - tag10
+  environment-url: http://localhost:8080

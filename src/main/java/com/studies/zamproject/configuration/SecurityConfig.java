@@ -46,13 +46,27 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 "/auth/login",
                                                 "/auth/logout",
+                                                "/registration/base/activate/*",
+                                                "/registration/base",
                                                 "/registration/organizer")
                                         .permitAll()
-                                        .requestMatchers("/registration/activate/*")
+                                        .requestMatchers("/registration/organizer/activate/*")
                                         .hasAnyAuthority(appConfig.getAdminRole())
                                         .requestMatchers(
                                                 HttpMethod.GET, "/events", "/events/*", "/tags")
                                         .permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/events")
+                                        .hasAnyAuthority(
+                                                appConfig.getAdminRole(),
+                                                appConfig.getOrganizerRole())
+                                        .requestMatchers(HttpMethod.PUT, "/events/*")
+                                        .hasAnyAuthority(
+                                                appConfig.getAdminRole(),
+                                                appConfig.getOrganizerRole())
+                                        .requestMatchers(HttpMethod.DELETE, "/events/*")
+                                        .hasAnyAuthority(
+                                                appConfig.getAdminRole(),
+                                                appConfig.getOrganizerRole())
                                         .anyRequest()
                                         .authenticated());
 
