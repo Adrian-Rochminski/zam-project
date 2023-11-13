@@ -3,7 +3,7 @@ package com.studies.zamproject.controllers;
 
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
-import com.studies.zamproject.dtos.LocationRequestDTO;
+import com.studies.zamproject.dtos.SearchCriteriaRequestDTO;
 import com.studies.zamproject.services.EventService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -73,8 +73,8 @@ public class EventController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/location")
-    public ResponseEntity<List<EventDTO>> getEventsByLocation(@RequestBody LocationRequestDTO locationRequestDTO) {
-        List<EventDTO> events = eventService.getEventsByLocation(locationRequestDTO);
+    public ResponseEntity<List<EventDTO>> getEventsByLocation(@RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+        List<EventDTO> events = eventService.getEventsByLocation(searchCriteriaRequestDTO);
         return ResponseEntity.ok(events);
     }
 }

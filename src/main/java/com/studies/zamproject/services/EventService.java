@@ -4,7 +4,7 @@ package com.studies.zamproject.services;
 import com.studies.zamproject.configuration.config.AppConfig;
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
-import com.studies.zamproject.dtos.LocationRequestDTO;
+import com.studies.zamproject.dtos.SearchCriteriaRequestDTO;
 import com.studies.zamproject.entities.Event;
 import com.studies.zamproject.entities.Tag;
 import com.studies.zamproject.entities.User;
@@ -121,16 +121,16 @@ public class EventService {
         return new PageImpl<>(eventDTOS, pageable, events.getTotalElements());
     }
 
-    public List<EventDTO> getEventsByLocation(LocationRequestDTO locationRequestDTO) {
+    public List<EventDTO> getEventsByLocation(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
         List<Event> events = eventRepo.findAll();
         return events.stream()
-                .filter(event -> isWithinRadius(event, locationRequestDTO))
+                .filter(event -> isWithinRadius(event, searchCriteriaRequestDTO))
                 .map(eventMapper::eventToEventDto)
                 .collect(Collectors.toList());
     }
-    private boolean isWithinRadius(Event event, LocationRequestDTO locationRequestDTO) {
-        double distance = haversineDistance(event.getLatitude(), event.getLongitude(), locationRequestDTO.getLatitude(), locationRequestDTO.getLongitude());
-        return distance <= locationRequestDTO.getRadius();
+    private boolean isWithinRadius(Event event, SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+        double distance = haversineDistance(event.getLatitude(), event.getLongitude(), searchCriteriaRequestDTO.getLatitude(), searchCriteriaRequestDTO.getLongitude());
+        return distance <= searchCriteriaRequestDTO.getRadius();
     }
 
     private double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
