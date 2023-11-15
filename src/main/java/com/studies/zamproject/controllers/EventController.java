@@ -72,9 +72,9 @@ public class EventController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/location")
-    public ResponseEntity<List<EventDTO>> getEventsByLocation(@RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        List<EventDTO> events = eventService.getEventsByLocation(searchCriteriaRequestDTO);
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<EventDTO>> getEventByCriteria(@RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+        List<EventDTO> events = eventService.getEventByCriteria(searchCriteriaRequestDTO);
         return ResponseEntity.ok(events);
     }
 }

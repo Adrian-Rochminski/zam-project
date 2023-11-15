@@ -6,13 +6,10 @@ import lombok.Data;
 
 @Data
 public class SearchCriteriaRequestDTO {
-    @NotBlank
     @NotNull
     private Double latitude;
-    @NotBlank
     @NotNull
     private Double longitude;
-    @NotBlank
     @NotNull
     private Double radius;
 }

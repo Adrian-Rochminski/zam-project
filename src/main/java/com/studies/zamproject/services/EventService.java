@@ -121,7 +121,7 @@ public class EventService {
         return new PageImpl<>(eventDTOS, pageable, events.getTotalElements());
     }
 
-    public List<EventDTO> getEventsByLocation(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+    public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
         List<Event> events = eventRepo.findAll();
         return events.stream()
                 .filter(event -> isWithinRadius(event, searchCriteriaRequestDTO))
