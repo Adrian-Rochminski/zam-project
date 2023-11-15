@@ -14,4 +14,14 @@ public class BadRequestException extends RuntimeException {
     public static BadRequestException userAlreadyExistsException(String email) {
         return new BadRequestException(String.format("User with email: %s already exists", email));
     }
+
+    public static BadRequestException eventIsAlreadyInFavorites(Long eventId) {
+        return new BadRequestException(
+                String.format("Event with id: %s is already in your favorites", eventId));
+    }
+
+    public static BadRequestException eventIsNotInYourFavorites(Long eventId) {
+        return new BadRequestException(
+                String.format("Event with id: %s is not in your favorites", eventId));
+    }
 }

@@ -1,7 +1,9 @@
 /* (C)2023 */
 package com.studies.zamproject.services;
 
-import com.studies.zamproject.dtos.RegistrationRequest;
+import com.studies.zamproject.configuration.config.AppConfig;
+import com.studies.zamproject.dtos.BaseUserRegistrationRequest;
+import com.studies.zamproject.dtos.OrganizerRegistrationRequest;
 import com.studies.zamproject.dtos.UserDTO;
 import com.studies.zamproject.entities.User;
 import com.studies.zamproject.entities.UserWithToken;
@@ -28,28 +30,46 @@ public class RegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserWithTokenRepository userWithTokenRepository;
 
-    @Value("${app.organizer-role}")
-    private String organizerRole;
+    private final AppConfig appConfig;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    public static final String ORGANIZER_REGISTRATION_ACTIVATION_MAIL =
+            "Aby dokończyć proces rejestracji potrzebujesz przesłać nam dokumenty"
+                    + " potwierdzające twój status podmiotu gospodarczego.";
+    public static final String ORGANIZER_REGISTRATION_ACTIVATION_MAIL_SUBJECT =
+            "Witaj nowy organizatorze!";
+
+    public static final String BASE_USER_REGISTRATION_ACTIVATION_MAIL =
+            "Aby dokończyć proces rejestracji kliknij w <a href=\"%s\">link</a>";
+    public static final String BASE_USER_REGISTRATION_ACTIVATION_MAIL_SUBJECT =
+            "Witaj nowy użytkowniku!";
 
     @Transactional(rollbackFor = Exception.class)
-    public UserDTO registerOrganizer(RegistrationRequest registrationRequest) {
-        var optionalUser = userRepository.findByEmail(registrationRequest.getEmail());
+    public UserDTO registerOrganizer(OrganizerRegistrationRequest organizerRegistrationRequest) {
+        var optionalUser = userRepository.findByEmail(organizerRegistrationRequest.getEmail());
         if (optionalUser.isPresent()) {
-            throw BadRequestException.userAlreadyExistsException(registrationRequest.getEmail());
+            throw BadRequestException.userAlreadyExistsException(
+                    organizerRegistrationRequest.getEmail());
         }
         var userWithToken =
                 UserWithToken.builder()
-                        .name(registrationRequest.getName())
-                        .telephone(registrationRequest.getTelephone())
-                        .email(registrationRequest.getEmail())
-                        .password(passwordEncoder.encode(registrationRequest.getPassword()))
+                        .name(organizerRegistrationRequest.getName())
+                        .telephone(organizerRegistrationRequest.getTelephone())
+                        .email(organizerRegistrationRequest.getEmail())
+                        .password(
+                                passwordEncoder.encode(organizerRegistrationRequest.getPassword()))
                         .token(UUID.randomUUID().toString())
-                        .role(organizerRole)
+                        .role(appConfig.getOrganizerRole())
                         .build();
         userWithTokenRepository.save(userWithToken);
 
         try {
-            emailService.sendVerificationEmail(registrationRequest.getEmail());
+            emailService.sendVerificationEmail(
+                    organizerRegistrationRequest.getEmail(),
+                    ORGANIZER_REGISTRATION_ACTIVATION_MAIL,
+                    ORGANIZER_REGISTRATION_ACTIVATION_MAIL_SUBJECT);
             return UserDTO.builder()
                     .email(userWithToken.getEmail())
                     .telephone(userWithToken.getTelephone())
@@ -82,6 +102,44 @@ public class RegistrationService {
     private void validateAccountActivationRequest(UserWithToken userRegistrationEntity) {
         if (userRepository.findByEmail(userRegistrationEntity.getEmail()).isPresent()) {
             throw DataConflictException.userIsAlreadyActivated(userRegistrationEntity.getEmail());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public UserDTO registerUser(BaseUserRegistrationRequest registerRequest) {
+        var optionalUser = userRepository.findByEmail(registerRequest.getEmail());
+        if (optionalUser.isPresent()) {
+            throw BadRequestException.userAlreadyExistsException(registerRequest.getEmail());
+        }
+        final String token = UUID.randomUUID().toString();
+        var userWithToken =
+                UserWithToken.builder()
+                        .name(registerRequest.getName())
+                        .email(registerRequest.getEmail())
+                        .password(passwordEncoder.encode(registerRequest.getPassword()))
+                        .token(token)
+                        .role(appConfig.getBaseRole())
+                        .build();
+        userWithTokenRepository.save(userWithToken);
+
+        try {
+            emailService.sendVerificationEmail(
+                    registerRequest.getEmail(),
+                    String.format(
+                            BASE_USER_REGISTRATION_ACTIVATION_MAIL,
+                            appConfig.getEnvironmentUrl()
+                                    + contextPath
+                                    + "/base/activate/"
+                                    + token),
+                    BASE_USER_REGISTRATION_ACTIVATION_MAIL_SUBJECT);
+            return UserDTO.builder()
+                    .email(userWithToken.getEmail())
+                    .telephone(userWithToken.getTelephone())
+                    .name(userWithToken.getName())
+                    .build();
+        } catch (Exception e) {
+            log.error("There was a problem with sending email", e);
+            throw InternalServerError.couldNotSendEmail(userWithToken.getEmail());
         }
     }
 }
