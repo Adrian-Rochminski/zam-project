@@ -4,6 +4,7 @@ package com.studies.zamproject.services;
 import com.studies.zamproject.configuration.config.AppConfig;
 import com.studies.zamproject.dtos.EventDTO;
 import com.studies.zamproject.dtos.EventRequestDTO;
+import com.studies.zamproject.dtos.SearchCriteriaRequestDTO;
 import com.studies.zamproject.entities.Event;
 import com.studies.zamproject.entities.Tag;
 import com.studies.zamproject.entities.User;
@@ -15,7 +16,10 @@ import com.studies.zamproject.repositories.TagRepository;
 import com.studies.zamproject.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -116,4 +120,29 @@ public class EventService {
         var eventDTOS = events.stream().map(eventMapper::eventToEventDto).toList();
         return new PageImpl<>(eventDTOS, pageable, events.getTotalElements());
     }
+
+    public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+        List<Event> events = eventRepo.findAll();
+        return events.stream()
+                .filter(event -> isWithinRadius(event, searchCriteriaRequestDTO))
+                .map(eventMapper::eventToEventDto)
+                .collect(Collectors.toList());
+    }
+    private boolean isWithinRadius(Event event, SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+        double distance = haversineDistance(event.getLatitude(), event.getLongitude(), searchCriteriaRequestDTO.getLatitude(), searchCriteriaRequestDTO.getLongitude());
+        return distance <= searchCriteriaRequestDTO.getRadius();
+    }
+
+    private double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
+        final int EARTH_RADIUS = 6371;
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return EARTH_RADIUS * c;
+    }
+
 }
