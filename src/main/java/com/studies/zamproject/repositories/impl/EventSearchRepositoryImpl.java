@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class EventSearchRepositoryImpl implements EventSearchRepository {
@@ -17,12 +18,17 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
     @Override
     public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria) {
         List<Event> events = getEventsInRadius(criteria);
-        events = events
-                .stream()
-                .filter(event ->
-                        event.getFree() || event.getFree() == criteria.getIsFree())
-                .toList();
-
+        List<String> keywords = Arrays.stream(criteria.getSearchString().split("\\s+")).toList();
+        events = events.stream()
+            .filter(event ->
+                (event.getFree() || event.getFree() == criteria.getIsFree()) &&
+                    (event.getTags().stream().anyMatch(tag -> keywords.contains(tag.getName())) ||
+                        keywords.stream().anyMatch(keyword ->
+                            event.getName().contains(keyword) ||
+                            event.getDescription().contains(keyword))
+                    )
+            )
+            .toList();
         return events;
     }
 
