@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ public class SearchCriteriaRequestDTO {
     @Max(15)
     private Double radius;
 
+    @Size(max = 60)
     private String searchString = "";
     @JsonFormat(pattern="yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Schema(type="string", pattern = "yyyy-MM-dd")
