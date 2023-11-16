@@ -6,6 +6,7 @@ import com.studies.zamproject.repositories.EventSearchRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,10 +23,10 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
         events = events.stream()
             .filter(event ->
                 (event.getFree() || event.getFree() == criteria.getIsFree()) &&
-                    (event.getTags().stream().anyMatch(tag -> keywords.contains(tag.getName())) ||
+                    (event.getTags().stream().anyMatch(tag -> keywords.contains(StringUtils.stripAccents(tag.getName()))) ||
                         keywords.stream().anyMatch(keyword ->
-                            event.getName().contains(keyword) ||
-                            event.getDescription().contains(keyword))
+                            StringUtils.stripAccents(event.getName()).contains(keyword) ||
+                            StringUtils.stripAccents(event.getDescription()).contains(keyword))
                     )
             )
             .toList();
