@@ -18,4 +18,8 @@ public class SearchCriteriaRequestDTO {
     @Max(15)
     private Double radius;
 
+    private String searchString = "";
+    private LocalDate startDate = LocalDate.now();
+    private LocalDate endDate = LocalDate.MAX;
+    private Boolean isFree = false;
 }
