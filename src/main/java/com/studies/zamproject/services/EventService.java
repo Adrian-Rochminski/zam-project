@@ -122,27 +122,9 @@ public class EventService {
     }
 
     public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        List<Event> events = eventRepo.findAll();
-        return events.stream()
-                .filter(event -> isWithinRadius(event, searchCriteriaRequestDTO))
-                .map(eventMapper::eventToEventDto)
-                .collect(Collectors.toList());
-    }
-    private boolean isWithinRadius(Event event, SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        double distance = haversineDistance(event.getLatitude(), event.getLongitude(), searchCriteriaRequestDTO.getLatitude(), searchCriteriaRequestDTO.getLongitude());
-        return distance <= searchCriteriaRequestDTO.getRadius();
+        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO)
+                .stream().map(eventMapper::eventToEventDto).toList();
     }
 
-    private double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
-        final int EARTH_RADIUS = 6371;
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
-    }
 
 }
