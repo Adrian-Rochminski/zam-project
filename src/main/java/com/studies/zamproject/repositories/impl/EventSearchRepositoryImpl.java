@@ -17,6 +17,12 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
     @Override
     public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria) {
         List<Event> events = getEventsInRadius(criteria);
+        events = events
+                .stream()
+                .filter(event ->
+                        event.getFree() || event.getFree() == criteria.getIsFree())
+                .toList();
+
         return events;
     }
 
@@ -24,12 +30,15 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
         String queryString = "SELECT * FROM event e WHERE ST_DWithin(" +
                 "ST_MakePoint(e.longitude, e.latitude)\\:\\:geography, " +
                 "ST_MakePoint(:longitude, :latitude)\\:\\:geography, " +
-                ":radius * 1000)";
+                ":radius * 1000) " +
+                "AND e.start_time > :startDate AND e.start_time <= :endDate ";
         Query query = entityManager.createNativeQuery(queryString, Event.class);
 
         query.setParameter("latitude", criteria.getLatitude());
         query.setParameter("longitude", criteria.getLongitude());
         query.setParameter("radius", criteria.getRadius());
+        query.setParameter("startDate", criteria.getStartDate());
+        query.setParameter("endDate", criteria.getEndDate());
 
         return query.getResultList();
     }
