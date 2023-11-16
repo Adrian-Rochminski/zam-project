@@ -1,5 +1,7 @@
 package com.studies.zamproject.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +21,11 @@ public class SearchCriteriaRequestDTO {
     private Double radius;
 
     private String searchString = "";
+    @JsonFormat(pattern="yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Schema(type="string", pattern = "yyyy-MM-dd")
     private LocalDate startDate = LocalDate.now();
-    private LocalDate endDate = LocalDate.MAX;
+    @JsonFormat(pattern="yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Schema(type="string", pattern = "yyyy-MM-dd")
+    private LocalDate endDate = LocalDate.of(3000, 12, 31);
     private Boolean isFree = false;
 }
