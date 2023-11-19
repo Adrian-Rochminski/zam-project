@@ -52,6 +52,10 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/registration/organizer/activate/*")
                                         .hasAnyAuthority(appConfig.getAdminRole())
+                                        .requestMatchers(HttpMethod.GET, "/events/owner")
+                                        .hasAnyAuthority(
+                                                appConfig.getAdminRole(),
+                                                appConfig.getOrganizerRole())
                                         .requestMatchers(
                                                 HttpMethod.GET, "/events", "/events/*", "/tags")
                                         .permitAll()

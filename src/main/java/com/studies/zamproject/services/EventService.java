@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,6 +47,12 @@ public class EventService {
     public EventDTO getEventDto(Long eventId) {
         var event = getEvent(eventId);
         return eventMapper.eventToEventDto(event);
+    }
+
+    public List<EventDTO> getEventsByOrganiserEmail(String email) {
+        return eventRepo.findByOwnerEmail(email).stream()
+                .map(eventMapper::eventToEventDto)
+                .toList();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -128,8 +133,14 @@ public class EventService {
                 .map(eventMapper::eventToEventDto)
                 .collect(Collectors.toList());
     }
+
     private boolean isWithinRadius(Event event, SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        double distance = haversineDistance(event.getLatitude(), event.getLongitude(), searchCriteriaRequestDTO.getLatitude(), searchCriteriaRequestDTO.getLongitude());
+        double distance =
+                haversineDistance(
+                        event.getLatitude(),
+                        event.getLongitude(),
+                        searchCriteriaRequestDTO.getLatitude(),
+                        searchCriteriaRequestDTO.getLongitude());
         return distance <= searchCriteriaRequestDTO.getRadius();
     }
 
@@ -137,12 +148,14 @@ public class EventService {
         final int EARTH_RADIUS = 6371;
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double a =
+                Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                        + Math.cos(Math.toRadians(lat1))
+                                * Math.cos(Math.toRadians(lat2))
+                                * Math.sin(lonDistance / 2)
+                                * Math.sin(lonDistance / 2);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return EARTH_RADIUS * c;
     }
-
 }
