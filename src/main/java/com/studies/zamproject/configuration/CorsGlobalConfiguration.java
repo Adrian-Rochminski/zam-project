@@ -1,3 +1,4 @@
+/* (C)2023 */
 package com.studies.zamproject.configuration;
 
 import org.springframework.context.annotation.Configuration;
@@ -16,4 +17,3 @@ public class CorsGlobalConfiguration implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 }
-
