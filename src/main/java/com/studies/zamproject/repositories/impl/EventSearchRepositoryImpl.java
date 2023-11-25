@@ -45,7 +45,7 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
         query.setParameter("longitude", criteria.getLongitude());
         query.setParameter("radius", criteria.getRadius());
         query.setParameter("startDate", criteria.getStartDate());
-        query.setParameter("endDate", criteria.getEndDate());
+        query.setParameter("endDate", criteria.getEndDate().plusDays(1));
 
         return query.getResultList();
     }
