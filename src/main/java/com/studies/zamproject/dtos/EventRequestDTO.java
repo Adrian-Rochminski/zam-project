@@ -38,5 +38,9 @@ public class EventRequestDTO {
     @Schema(type="string", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Schema(type="string", pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
+    
     private Set<Long> tags;
 }

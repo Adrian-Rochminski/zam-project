@@ -46,6 +46,8 @@ public class Event {
 
     @NotNull
     private LocalDateTime startTime;
+    @NotNull
+    private LocalDateTime endTime;
 
     @ManyToMany(
             cascade = {CascadeType.MERGE},
