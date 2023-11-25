@@ -38,7 +38,7 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
                 "ST_MakePoint(e.longitude, e.latitude)\\:\\:geography, " +
                 "ST_MakePoint(:longitude, :latitude)\\:\\:geography, " +
                 ":radius * 1000) " +
-                "AND e.start_time >= :startDate AND e.endDate <= :endDate ";
+                "AND e.start_time >= :startDate AND e.end_time <= :endDate ";
         Query query = entityManager.createNativeQuery(queryString, Event.class);
 
         query.setParameter("latitude", criteria.getLatitude());
