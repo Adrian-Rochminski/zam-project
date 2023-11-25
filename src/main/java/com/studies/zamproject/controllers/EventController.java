@@ -8,7 +8,6 @@ import com.studies.zamproject.services.EventService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,8 +72,15 @@ public class EventController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<EventDTO>> getEventByCriteria(@RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
+    public ResponseEntity<List<EventDTO>> getEventByCriteria(
+            @RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
         List<EventDTO> events = eventService.getEventByCriteria(searchCriteriaRequestDTO);
         return ResponseEntity.ok(events);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/owner")
+    public ResponseEntity<List<EventDTO>> getEventsByOwner(Authentication authentication) {
+        return ResponseEntity.ok(eventService.getEventsByOrganiserEmail(authentication.getName()));
     }
 }

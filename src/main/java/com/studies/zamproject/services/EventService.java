@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,6 +47,12 @@ public class EventService {
     public EventDTO getEventDto(Long eventId) {
         var event = getEvent(eventId);
         return eventMapper.eventToEventDto(event);
+    }
+
+    public List<EventDTO> getEventsByOrganiserEmail(String email) {
+        return eventRepo.findByOwnerEmail(email).stream()
+                .map(eventMapper::eventToEventDto)
+                .toList();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -125,6 +130,4 @@ public class EventService {
         return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO)
                 .stream().map(eventMapper::eventToEventDto).toList();
     }
-
-
 }
