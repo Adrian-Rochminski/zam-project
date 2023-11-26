@@ -71,7 +71,7 @@ public class EventController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/search")
+    @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EventDTO>> getEventByCriteria(
             @RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
         List<EventDTO> events = eventService.getEventByCriteria(searchCriteriaRequestDTO);

@@ -7,6 +7,8 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +43,11 @@ public class Event {
     @DecimalMin("-180.0")
     @DecimalMax("180.0")
     private Double longitude;
+
+    @NotNull
+    private LocalDateTime startTime;
+    @NotNull
+    private LocalDateTime endTime;
 
     @ManyToMany(
             cascade = {CascadeType.MERGE},
