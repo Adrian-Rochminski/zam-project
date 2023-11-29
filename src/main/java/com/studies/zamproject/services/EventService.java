@@ -18,7 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -127,7 +126,8 @@ public class EventService {
     }
 
     public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO)
-                .stream().map(eventMapper::eventToEventDto).toList();
+        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO).stream()
+                .map(eventMapper::eventToEventDto)
+                .toList();
     }
 }

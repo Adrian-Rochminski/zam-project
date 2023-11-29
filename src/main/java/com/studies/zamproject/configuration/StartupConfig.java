@@ -15,23 +15,29 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class StartupConfig {
 
+    public static final String TEST = "test@test.com";
     private final AppConfig appConfig;
 
     @Bean
     public CommandLineRunner initData(UserRepository userRepository, TagRepository tagRepository) {
         return (args) -> {
-            userRepository.save(
-                    User.builder()
-                            .email("test@test.com")
-                            .name("test")
-                            .password(
-                                    "$2a$12$1ZdVtupqu72K7kUDOu4uVumukogroUEDJYVyihQgJdTAP7uNSFEoK")
-                            .role(appConfig.getAdminRole())
-                            .telephone("123456789")
-                            .build());
-            appConfig
-                    .getTags()
-                    .forEach(tagName -> tagRepository.save(Tag.builder().name(tagName).build()));
+            if (!userRepository.existsByEmail(TEST)) {
+                userRepository.save(
+                        User.builder()
+                                .email("test@test.com")
+                                .name("test")
+                                .password(
+                                        "$2a$12$1ZdVtupqu72K7kUDOu4uVumukogroUEDJYVyihQgJdTAP7uNSFEoK")
+                                .role(appConfig.getAdminRole())
+                                .telephone("123456789")
+                                .build());
+            }
+            if (tagRepository.count() < appConfig.getTags().size()) {
+                appConfig
+                        .getTags()
+                        .forEach(
+                                tagName -> tagRepository.save(Tag.builder().name(tagName).build()));
+            }
         };
     }
 }

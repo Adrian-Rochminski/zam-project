@@ -8,7 +8,6 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
@@ -34,13 +33,13 @@ public class EventRequestDTO {
     @DecimalMax("180.0")
     private Double longitude;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @Schema(type="string", pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @Schema(type="string", pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
-    
+
     private Set<Long> tags;
 }
