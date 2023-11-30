@@ -7,16 +7,17 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "event")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +45,8 @@ public class Event {
     @DecimalMax("180.0")
     private Double longitude;
 
-    @NotNull
-    private LocalDateTime startTime;
-    @NotNull
-    private LocalDateTime endTime;
+    @NotNull private LocalDateTime startTime;
+    @NotNull private LocalDateTime endTime;
 
     @ManyToMany(
             cascade = {CascadeType.MERGE},
