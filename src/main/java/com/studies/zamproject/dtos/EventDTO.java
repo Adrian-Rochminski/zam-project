@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
+import lombok.Setter;
 
 @Data
+@Setter
 public class EventDTO {
     private Long id;
     private String name;
@@ -24,6 +26,8 @@ public class EventDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
+
+    private String imageUrl;
 
     private Set<String> tags;
 }
