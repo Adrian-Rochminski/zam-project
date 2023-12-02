@@ -33,7 +33,7 @@ public class Event {
     private User owner;
 
     private Boolean free;
-
+    private String imageUrl;
     @Size(max = 10000)
     private String description;
 
