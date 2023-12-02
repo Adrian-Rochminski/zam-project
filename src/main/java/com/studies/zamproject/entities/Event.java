@@ -34,6 +34,7 @@ public class Event {
 
     private Boolean free;
     private String imageUrl;
+
     @Size(max = 10000)
     private String description;
 
