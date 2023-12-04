@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class EventRequestDTO {
