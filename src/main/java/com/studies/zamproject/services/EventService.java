@@ -15,9 +15,9 @@ import com.studies.zamproject.repositories.EventRepository;
 import com.studies.zamproject.repositories.TagRepository;
 import com.studies.zamproject.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -129,5 +129,29 @@ public class EventService {
         return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO).stream()
                 .map(eventMapper::eventToEventDto)
                 .toList();
+    }
+
+    public List<EventDTO> getFavoritesByEmail(String email) {
+        Optional<User> optionalUser = userRepo.findByEmail(email);
+        Set<Event> events;
+        if (optionalUser.isPresent()) {
+            events = optionalUser.get().getFavorites();
+        } else {
+            events = new HashSet<>();
+        }
+        return events.stream().map(eventMapper::eventToEventDto).toList();
+    }
+
+    public void addEventToFavorites(String email, Long id) {
+        Optional<User> optionalUser = userRepo.findByEmail(email);
+        Set<Event> events;
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            events = user.getFavorites();
+            events.add(eventRepo.findById(id).orElseThrow());
+            userRepo.save(user);
+        } else {
+            throw ForbiddenException.noPermissionToOperation();
+        }
     }
 }

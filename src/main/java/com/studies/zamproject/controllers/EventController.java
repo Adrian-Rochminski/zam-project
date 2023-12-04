@@ -86,4 +86,17 @@ public class EventController {
     public ResponseEntity<List<EventDTO>> getEventsByOwner(Authentication authentication) {
         return ResponseEntity.ok(eventService.getEventsByOrganiserEmail(authentication.getName()));
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/add_favorite/{id}")
+    public ResponseEntity<Void> getEventsByOwner(Authentication authentication, @PathVariable Long id) {
+        eventService.addEventToFavorites(authentication.getName(), id);
+        return ResponseEntity.ok().build();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/favorites")
+    public ResponseEntity<List<EventDTO>> getFavorites(Authentication authentication) {
+        return ResponseEntity.ok(eventService.getFavoritesByEmail(authentication.getName()));
+    }
 }
