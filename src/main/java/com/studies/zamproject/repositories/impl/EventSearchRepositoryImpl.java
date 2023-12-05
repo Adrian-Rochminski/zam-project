@@ -3,8 +3,6 @@ package com.studies.zamproject.repositories.impl;
 
 import com.studies.zamproject.dtos.SearchCriteriaRequestDTO;
 import com.studies.zamproject.entities.Event;
-import com.studies.zamproject.entities.Tag;
-import com.studies.zamproject.mappers.TagMapper;
 import com.studies.zamproject.repositories.EventSearchRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,7 +10,6 @@ import jakarta.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class EventSearchRepositoryImpl implements EventSearchRepository {
 
@@ -21,17 +18,20 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
     @Override
     public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria) {
         List<Event> events = getEventsInRadius(criteria);
-        List<String> keywords = Arrays.stream(criteria.getSearchString().split("\\s+")).toList();
+        List<String> keywords = new java.util.ArrayList<>(Arrays.stream(criteria.getSearchString().split("\\s+")).toList());
+        keywords.remove("");
 
         events = events.stream()
             .filter(event ->
                 (event.getFree() || event.getFree() == criteria.getIsFree())
-                    && (event.getTags().stream().anyMatch(tag -> keywords.contains(StringUtils.stripAccents(tag.getName()))
-                        || criteria.getTags().contains(tag.getId()))
-                        || keywords.stream().anyMatch(keyword ->
-                            StringUtils.stripAccents(event.getName()).contains(keyword)
-                            || StringUtils.stripAccents(event.getDescription()).contains(keyword))
-                        )
+                    && (criteria.getTags().isEmpty() || event.getTags().stream().anyMatch(tag ->
+                    criteria.getTags().contains(tag.getId())))
+                    && (keywords.isEmpty() || event.getTags().stream().anyMatch(tag ->
+                    keywords.contains(StringUtils.stripAccents(tag.getName())))
+                    || keywords.stream().anyMatch(keyword ->
+                    StringUtils.stripAccents(event.getName()).contains(keyword)
+                        || StringUtils.stripAccents(event.getDescription()).contains(keyword))
+                )
             )
             .toList();
         return events;

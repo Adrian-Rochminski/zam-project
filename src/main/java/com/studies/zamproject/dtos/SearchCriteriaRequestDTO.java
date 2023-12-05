@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Data;
@@ -33,7 +34,7 @@ public class SearchCriteriaRequestDTO {
     @Schema(type = "string", pattern = "yyyy-MM-dd")
     private LocalDate endDate = LocalDate.of(3000, 12, 31);
 
-    private Set<Long> tags;
+    private Set<Long> tags = new HashSet<>();
 
     private Boolean isFree = false;
 }

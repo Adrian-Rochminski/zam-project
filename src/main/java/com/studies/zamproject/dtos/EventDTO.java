@@ -29,5 +29,5 @@ public class EventDTO {
 
     private String imageUrl;
 
-    private Set<String> tags;
+    private Set<TagDTO> tags;
 }
