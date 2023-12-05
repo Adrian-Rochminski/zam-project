@@ -25,12 +25,12 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
             .filter(event ->
                 (event.getFree() || event.getFree() == criteria.getIsFree())
                     && (criteria.getTags().isEmpty() || event.getTags().stream().anyMatch(tag ->
-                    criteria.getTags().contains(tag.getId())))
+                        criteria.getTags().contains(tag.getId())))
                     && (keywords.isEmpty() || event.getTags().stream().anyMatch(tag ->
-                    keywords.contains(StringUtils.stripAccents(tag.getName())))
-                    || keywords.stream().anyMatch(keyword ->
-                    StringUtils.stripAccents(event.getName()).contains(keyword)
-                        || StringUtils.stripAccents(event.getDescription()).contains(keyword))
+                        keywords.contains(StringUtils.stripAccents(tag.getName())))
+                        || keywords.stream().anyMatch(keyword ->
+                            StringUtils.stripAccents(event.getName()).contains(keyword)
+                            || StringUtils.stripAccents(event.getDescription()).contains(keyword))
                 )
             )
             .toList();
