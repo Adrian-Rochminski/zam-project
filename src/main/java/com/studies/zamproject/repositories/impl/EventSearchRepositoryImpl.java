@@ -18,36 +18,22 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
     @Override
     public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria) {
         List<Event> events = getEventsInRadius(criteria);
-        List<String> keywords = Arrays.stream(criteria.getSearchString().split("\\s+")).toList();
-        events =
-                events.stream()
-                        .filter(
-                                event ->
-                                        (event.getFree() || event.getFree() == criteria.getIsFree())
-                                                && (event.getTags().stream()
-                                                                .anyMatch(
-                                                                        tag ->
-                                                                                keywords.contains(
-                                                                                        StringUtils
-                                                                                                .stripAccents(
-                                                                                                        tag
-                                                                                                                .getName())))
-                                                        || keywords.stream()
-                                                                .anyMatch(
-                                                                        keyword ->
-                                                                                StringUtils
-                                                                                                .stripAccents(
-                                                                                                        event
-                                                                                                                .getName())
-                                                                                                .contains(
-                                                                                                        keyword)
-                                                                                        || StringUtils
-                                                                                                .stripAccents(
-                                                                                                        event
-                                                                                                                .getDescription())
-                                                                                                .contains(
-                                                                                                        keyword))))
-                        .toList();
+        List<String> keywords = new java.util.ArrayList<>(Arrays.stream(criteria.getSearchString().split("\\s+")).toList());
+        keywords.remove("");
+
+        events = events.stream()
+            .filter(event ->
+                (event.getFree() || event.getFree() == criteria.getIsFree())
+                    && (criteria.getTags().isEmpty() || event.getTags().stream().anyMatch(tag ->
+                        criteria.getTags().contains(tag.getId())))
+                    && (keywords.isEmpty() || event.getTags().stream().anyMatch(tag ->
+                        keywords.contains(StringUtils.stripAccents(tag.getName())))
+                        || keywords.stream().anyMatch(keyword ->
+                            StringUtils.stripAccents(event.getName()).contains(keyword)
+                            || StringUtils.stripAccents(event.getDescription()).contains(keyword))
+                )
+            )
+            .toList();
         return events;
     }
 
