@@ -10,6 +10,7 @@ import com.studies.zamproject.repositories.TagRepository;
 import com.studies.zamproject.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -89,10 +90,11 @@ public class StartupConfig {
                                 .free(false)
                                 .latitude(51.7592)
                                 .longitude(19.4560)
-                                .startTime(LocalDateTime.parse("2023-12-03 14:00:00", formatter))
-                                .endTime(LocalDateTime.parse("2023-12-03 22:00:00", formatter))
+                                .startTime(LocalDateTime.parse("2023-12-15 14:00:00", formatter))
+                                .endTime(LocalDateTime.parse("2023-12-15 22:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Łódź Music Festival")
+                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(6))))
                                 .description(
                                         "Join us for a day of music and fun at the annual Łódź"
                                             + " Music Festival featuring local and international"
@@ -103,10 +105,11 @@ public class StartupConfig {
                                 .free(true)
                                 .latitude(51.6649)
                                 .longitude(19.3549)
-                                .startTime(LocalDateTime.parse("2023-12-05 20:00:00", formatter))
-                                .endTime(LocalDateTime.parse("2023-12-05 23:00:00", formatter))
+                                .startTime(LocalDateTime.parse("2023-12-14 20:00:00", formatter))
+                                .endTime(LocalDateTime.parse("2023-12-16 23:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Open-Air Cinema Night")
+                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(6))))
                                 .description(
                                         "Enjoy a classic film under the stars at our outdoor cinema"
                                                 + " event near Pabianice.")
@@ -116,10 +119,11 @@ public class StartupConfig {
                                 .free(true)
                                 .latitude(51.7500)
                                 .longitude(19.3333)
-                                .startTime(LocalDateTime.parse("2023-12-10 11:00:00", formatter))
-                                .endTime(LocalDateTime.parse("2023-12-10 17:00:00", formatter))
+                                .startTime(LocalDateTime.parse("2023-12-17 11:00:00", formatter))
+                                .endTime(LocalDateTime.parse("2023-12-17 17:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Konstantynów Łódzki Food Fair")
+                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(6))))
                                 .description(
                                         "Explore local and international cuisine at our annual food"
                                                 + " fair in Konstantynów Łódzki.")
@@ -133,6 +137,14 @@ public class StartupConfig {
                                 .endTime(LocalDateTime.parse("2023-12-15 16:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Creative Art Workshop")
+                                .tags(
+                                        Set.of(
+                                                tagRepository.findByName(
+                                                        appConfig.getTags().get(6)),
+                                                tagRepository.findByName(
+                                                        appConfig.getTags().get(7)),
+                                                tagRepository.findByName(
+                                                        appConfig.getTags().get(1))))
                                 .description(
                                         "Discover your inner artist at our creative art workshop"
                                             + " near Aleksandrów Łódzki. All materials provided.")
@@ -142,10 +154,16 @@ public class StartupConfig {
                                 .free(true)
                                 .latitude(51.7738889)
                                 .longitude(19.4594444)
-                                .startTime(LocalDateTime.parse("2023-11-18 12:00:00", formatter))
-                                .endTime(LocalDateTime.parse("2023-11-18 18:00:00", formatter))
+                                .startTime(LocalDateTime.parse("2023-12-13 12:00:00", formatter))
+                                .endTime(LocalDateTime.parse("2023-12-18 18:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Wystawa \"Chwile ulotne chwytam\"")
+                                .tags(
+                                        Set.of(
+                                                tagRepository.findByName(
+                                                        appConfig.getTags().get(3)),
+                                                tagRepository.findByName(
+                                                        appConfig.getTags().get(9))))
                                 .description(
                                         "Dorota Masłowska, Wojna polsko-ruska pod flagą"
                                             + " biało-czerwoną Kuchennymi drzwiami, mieszając w"
@@ -162,10 +180,11 @@ public class StartupConfig {
                                 .free(false)
                                 .latitude(51.7733333)
                                 .longitude(19.469722)
-                                .startTime(LocalDateTime.parse("2023-12-03 17:00:00", formatter))
-                                .endTime(LocalDateTime.parse("2023-12-03 21:00:00", formatter))
+                                .startTime(LocalDateTime.parse("2023-12-14 17:00:00", formatter))
+                                .endTime(LocalDateTime.parse("2023-12-14 21:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Lamaila w Teatrze Wielkim")
+                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(6))))
                                 .description(
                                         "Widowisko taneczne w dwóch aktach i 19 scenach. Spektakl"
                                             + " familijny. Historia mówi o wydarzeniach dziejących"
@@ -179,10 +198,11 @@ public class StartupConfig {
                                 .free(false)
                                 .latitude(51.77)
                                 .longitude(19.565555)
-                                .startTime(LocalDateTime.parse("2023-12-03 10:00:00", formatter))
-                                .endTime(LocalDateTime.parse("2023-12-03 17:00:00", formatter))
+                                .startTime(LocalDateTime.parse("2023-12-15 10:00:00", formatter))
+                                .endTime(LocalDateTime.parse("2023-12-17 17:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Mikołajkowy turniej tenisowy")
+                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(4))))
                                 .description(
                                         "Najmłodsi adepci tenisa ziemnego wystartują w objętym"
                                                 + " honorowym patronatem Prezydenta Miasta Łodzi"
