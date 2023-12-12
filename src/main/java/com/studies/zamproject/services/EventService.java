@@ -128,8 +128,8 @@ public class EventService {
 
     public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO, String name) {
         Optional<User> optionalUser = userRepo.findByEmail(name);
-        Long userId = optionalUser.orElseThrow().getId();
-        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO, userId).stream()
+        User user = optionalUser.orElseThrow();
+        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO, user).stream()
                 .map(eventMapper::eventToEventDto)
                 .toList();
     }
