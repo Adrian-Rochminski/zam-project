@@ -17,6 +17,7 @@ import com.studies.zamproject.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -125,8 +126,10 @@ public class EventService {
         return new PageImpl<>(eventDTOS, pageable, events.getTotalElements());
     }
 
-    public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO).stream()
+    public List<EventDTO> getEventByCriteria(SearchCriteriaRequestDTO searchCriteriaRequestDTO, String name) {
+        Optional<User> optionalUser = userRepo.findByEmail(name);
+        Long userId = optionalUser.orElseThrow().getId();
+        return eventRepo.findBySearchCriteria(searchCriteriaRequestDTO, userId).stream()
                 .map(eventMapper::eventToEventDto)
                 .toList();
     }

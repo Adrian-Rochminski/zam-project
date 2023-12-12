@@ -76,8 +76,8 @@ public class EventController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<EventDTO>> getEventByCriteria(
-            @RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO) {
-        List<EventDTO> events = eventService.getEventByCriteria(searchCriteriaRequestDTO);
+            @RequestBody SearchCriteriaRequestDTO searchCriteriaRequestDTO, Authentication authentication) {
+        List<EventDTO> events = eventService.getEventByCriteria(searchCriteriaRequestDTO, authentication.getName());
         return ResponseEntity.ok(events);
     }
 

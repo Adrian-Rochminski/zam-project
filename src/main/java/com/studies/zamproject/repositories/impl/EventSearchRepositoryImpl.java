@@ -16,8 +16,8 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
     @PersistenceContext private EntityManager entityManager;
 
     @Override
-    public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria) {
-        List<Event> events = getEventsInRadius(criteria);
+    public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria, Long userId) {
+        List<Event> events = getEventsInRadius(criteria, userId);
         List<String> keywords = new java.util.ArrayList<>(Arrays.stream(criteria.getSearchString().split("\\s+")).toList());
         keywords.remove("");
 
@@ -37,13 +37,16 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
         return events;
     }
 
-    private List<Event> getEventsInRadius(SearchCriteriaRequestDTO criteria) {
+    private List<Event> getEventsInRadius(SearchCriteriaRequestDTO criteria, Long userId) {
         String queryString =
-                "SELECT * FROM event e WHERE ST_DWithin("
-                        + "ST_MakePoint(e.longitude, e.latitude)\\:\\:geography, "
-                        + "ST_MakePoint(:longitude, :latitude)\\:\\:geography, "
-                        + ":radius * 1000) "
-                        + "AND e.start_time >= :startDate AND e.end_time <= :endDate ";
+                "SELECT e.*, CASE WHEN favs.user_id = :userId THEN TRUE ELSE FALSE END as is_favorite " +
+                        "FROM event e " +
+                        "LEFT JOIN user_favorites as favs ON e.id = favs.event_id AND favs.user_id = :userId " +
+                        "WHERE ST_DWithin(" +
+                        "ST_MakePoint(e.longitude, e.latitude)\\:\\:geography, " +
+                        "ST_MakePoint(:longitude, :latitude)\\:\\:geography, " +
+                        ":radius * 1000) " +
+                        "AND e.start_time >= :startDate AND e.end_time <= :endDate ";
         Query query = entityManager.createNativeQuery(queryString, Event.class);
 
         query.setParameter("latitude", criteria.getLatitude());
@@ -51,6 +54,7 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
         query.setParameter("radius", criteria.getRadius());
         query.setParameter("startDate", criteria.getStartDate());
         query.setParameter("endDate", criteria.getEndDate().plusDays(1));
+        query.setParameter("userId", userId);
 
         return query.getResultList();
     }

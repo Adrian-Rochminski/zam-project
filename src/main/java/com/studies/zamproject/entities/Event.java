@@ -53,4 +53,7 @@ public class Event {
             cascade = {CascadeType.MERGE},
             fetch = FetchType.LAZY)
     private Set<Tag> tags;
+
+    @Transient
+    private Boolean isFavorite;
 }

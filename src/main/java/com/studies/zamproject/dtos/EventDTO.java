@@ -30,4 +30,6 @@ public class EventDTO {
     private String imageUrl;
 
     private Set<TagDTO> tags;
+
+    private Boolean isFavorite;
 }
