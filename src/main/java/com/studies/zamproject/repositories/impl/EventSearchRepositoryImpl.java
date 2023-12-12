@@ -3,20 +3,23 @@ package com.studies.zamproject.repositories.impl;
 
 import com.studies.zamproject.dtos.SearchCriteriaRequestDTO;
 import com.studies.zamproject.entities.Event;
+import com.studies.zamproject.entities.User;
 import com.studies.zamproject.repositories.EventSearchRepository;
+import com.studies.zamproject.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EventSearchRepositoryImpl implements EventSearchRepository {
 
     @PersistenceContext private EntityManager entityManager;
 
     @Override
-    public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria) {
+    public List<Event> findBySearchCriteria(SearchCriteriaRequestDTO criteria, User user) {
         List<Event> events = getEventsInRadius(criteria);
         List<String> keywords = new java.util.ArrayList<>(Arrays.stream(criteria.getSearchString().split("\\s+")).toList());
         keywords.remove("");
@@ -34,16 +37,19 @@ public class EventSearchRepositoryImpl implements EventSearchRepository {
                 )
             )
             .toList();
+        events.forEach(event -> event.setIsFavorite(user.getFavorites().contains(event)));
         return events;
     }
 
     private List<Event> getEventsInRadius(SearchCriteriaRequestDTO criteria) {
         String queryString =
-                "SELECT * FROM event e WHERE ST_DWithin("
-                        + "ST_MakePoint(e.longitude, e.latitude)\\:\\:geography, "
-                        + "ST_MakePoint(:longitude, :latitude)\\:\\:geography, "
-                        + ":radius * 1000) "
-                        + "AND e.start_time >= :startDate AND e.end_time <= :endDate ";
+            "SELECT *" +
+                "FROM event e " +
+                "WHERE ST_DWithin(" +
+                    "ST_MakePoint(e.longitude, e.latitude)\\:\\:geography, " +
+                    "ST_MakePoint(:longitude, :latitude)\\:\\:geography, " +
+                    ":radius * 1000) " +
+                "AND e.start_time >= :startDate AND e.end_time <= :endDate ";
         Query query = entityManager.createNativeQuery(queryString, Event.class);
 
         query.setParameter("latitude", criteria.getLatitude());
