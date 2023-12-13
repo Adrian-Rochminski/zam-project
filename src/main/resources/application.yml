@@ -35,14 +35,11 @@ app:
   admin-role: admin
   base-role: base
   tags:
-    - konwent
-    - koncert
-    - wykład
-    - turniej
-    - prelekcja
-    - występ
-    - fantastyka
-    - historyczne
-    - futuryzm
-    - religijne
+    - convention
+    - concert
+    - lecture
+    - tournament
+    - trade-fair
+    - workshops
+    - festival
   environment-url: http://localhost:8080

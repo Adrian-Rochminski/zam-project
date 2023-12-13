@@ -142,9 +142,7 @@ public class StartupConfig {
                                                 tagRepository.findByName(
                                                         appConfig.getTags().get(6)),
                                                 tagRepository.findByName(
-                                                        appConfig.getTags().get(7)),
-                                                tagRepository.findByName(
-                                                        appConfig.getTags().get(1))))
+                                                        appConfig.getTags().get(5))))
                                 .description(
                                         "Discover your inner artist at our creative art workshop"
                                             + " near Aleksandrów Łódzki. All materials provided.")
@@ -161,9 +159,7 @@ public class StartupConfig {
                                 .tags(
                                         Set.of(
                                                 tagRepository.findByName(
-                                                        appConfig.getTags().get(3)),
-                                                tagRepository.findByName(
-                                                        appConfig.getTags().get(9))))
+                                                        appConfig.getTags().get(0))))
                                 .description(
                                         "Dorota Masłowska, Wojna polsko-ruska pod flagą"
                                             + " biało-czerwoną Kuchennymi drzwiami, mieszając w"
@@ -202,7 +198,7 @@ public class StartupConfig {
                                 .endTime(LocalDateTime.parse("2023-12-17 17:00:00", formatter))
                                 .owner(userRepository.findByEmail(TEST).get())
                                 .name("Mikołajkowy turniej tenisowy")
-                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(4))))
+                                .tags(Set.of(tagRepository.findByName(appConfig.getTags().get(3))))
                                 .description(
                                         "Najmłodsi adepci tenisa ziemnego wystartują w objętym"
                                                 + " honorowym patronatem Prezydenta Miasta Łodzi"
