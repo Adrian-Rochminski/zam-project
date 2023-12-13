@@ -80,6 +80,9 @@ public class EventService {
         if (update.getFree() != null) {
             updatedEvent.setFree(update.getFree());
         }
+        if (update.getName() != null) {
+            updatedEvent.setName(update.getName());
+        }
         if (update.getDescription() != null) {
             updatedEvent.setDescription(update.getDescription());
         }
